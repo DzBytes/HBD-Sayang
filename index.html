@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>Selamat Ulang Tahun, Keyza Berliana 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Lato:wght@200;300;400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- Kursor custom -->
+<div id="cursor"></div>
+<div id="cursor-dot"></div>
+
+<!-- Konfeti -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- ══════════════════════════════════════
+     INTRO LIAN-N (seperti Netflix)
+     ══════════════════════════════════════ -->
+<div id="lian-intro">
+  <div id="lian-logo-wrap">
+    <div id="lian-name">LianN</div>
+    <div id="lian-underline"></div>
+  </div>
+  <div id="lian-tagline">Sebuah kisah yang paling istimewa</div>
+  <button id="lian-skip">Lewati</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     NAVBAR
+     ══════════════════════════════════════ -->
+<nav id="nav">
+  <button data-page="opener"           onclick="goToPage(0)">✦ Beranda</button>
+  <button data-page="typing-section"   onclick="goToPage(1)">Pesan</button>
+  <button data-page="countdown-section"onclick="goToPage(2)">Countdown</button>
+  <button data-page="gifts-section"    onclick="goToPage(3)">Hadiah</button>
+  <button data-page="quiz-section"     onclick="goToPage(4)">Kuis</button>
+  <button data-page="game-section"     onclick="goToPage(5)">Game</button>
+  <button data-page="open-when-section"onclick="goToPage(6)">Buka Ketika</button>
+  <button data-page="starmap-section"  onclick="goToPage(7)">Peta Bintang</button>
+  <button data-page="letter-section"   onclick="goToPage(8)">Surat</button>
+  <button data-page="voice-section"    onclick="goToPage(9)">Pesan Suara</button>
+</nav>
+
+<!-- ══════════════════════════════════════
+     CONTAINER HALAMAN
+     ══════════════════════════════════════ -->
+<div id="pages-container">
+
+  <!-- 1. BERANDA (OPENER) -->
+  <section class="page" id="opener">
+    <div class="stars-bg" id="stars-bg"></div>
+    <h1>Selamat<br><em>Ulang Tahun,</em><br>Sayangku</h1>
+    <p class="tagline">— hari yang alam semesta siapkan khusus untukmu —</p>
+    <button id="open-btn" onclick="openCard()">✦ Buka Kartumu</button>
+  </section>
+
+  <!-- 2. PESAN MENGETIK -->
+  <section class="page" id="typing-section">
+    <div id="typed-text"><span class="cursor-blink"></span></div>
+  </section>
+
+  <!-- 3. COUNTDOWN -->
+  <!--
+    *** UBAH TANGGAL DI SCRIPT.JS ***
+    Cari baris: const birthday = new Date(...)
+    dan ganti dengan tanggal ulang tahun Keyza.
+  -->
+  <section class="page" id="countdown-section">
+    <h2>⏳ Hitung Mundur Menuju Hari Spesialmu</h2>
+    <div id="countdown-display">
+      <div class="cd-box"><span class="cd-num" id="cd-days">00</span><span class="cd-label">Hari</span></div>
+      <div class="cd-box"><span class="cd-num" id="cd-hours">00</span><span class="cd-label">Jam</span></div>
+      <div class="cd-box"><span class="cd-num" id="cd-mins">00</span><span class="cd-label">Menit</span></div>
+      <div class="cd-box"><span class="cd-num" id="cd-secs">00</span><span class="cd-label">Detik</span></div>
+    </div>
+    <div id="surprise-msg" style="margin-top:36px">
+      <h2>🎉 Hari Ini adalah HARIMU!</h2>
+      <p>Bintang-bintang sejajar, alam semesta tersenyum, dan kamu lahir. Setiap hal tentang hari ini adalah untuk merayakanmu, Sayangku. 💕</p>
+    </div>
+  </section>
+
+  <!-- 5. HADIAH -->
+  <section class="page" id="gifts-section">
+    <h2>🎁 Hadiahmu</h2>
+    <p class="sub">ketuk kotak hadiah untuk membukanya</p>
+    <div class="gift-box-wrap" onclick="revealGift()">
+      <span id="gift-icon">🎁</span>
+    </div>
+    <div id="gift-reveal">
+      <div class="gift-item" id="gift-card-inner">
+        <span class="g-icon"></span>
+        <div class="g-title"></div>
+        <div class="g-text"></div>
+      </div>
+      <button id="next-gift-btn" onclick="nextGift()">✦ Hadiah Berikutnya</button>
+    </div>
+  </section>
+
+  <!-- 6. KUIS -->
+  <section class="page" id="quiz-section">
+    <h2>🎀 Kuis Ulang Tahun</h2>
+    <div class="quiz-q" id="quiz-question"></div>
+    <div class="quiz-options" id="quiz-options"></div>
+    <div class="quiz-result" id="quiz-result"></div>
+    <button id="next-q-btn" onclick="nextQuestion()">Pertanyaan berikutnya ›</button>
+  </section>
+
+  <!-- 7. GAME BALON -->
+  <section class="page" id="game-section">
+    <h2>🎈 Pecahkan Balonnya!</h2>
+    <p class="sub">pecahkan balon sebanyak mungkin — setiap satu adalah harapan untukmu</p>
+    <div id="game-canvas-wrap">
+      <canvas id="game-canvas"></canvas>
+      <div id="game-score">0 harapan</div>
+      <div id="game-msg">
+        <p>Siap mengumpulkan harapanmu?</p>
+        <button id="start-game-btn" onclick="startGame()">Mulai Game</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. BUKA KETIKA... -->
+  <section class="page" id="open-when-section">
+    <h2>💌 Buka Ketika...</h2>
+    <p class="sub">surat yang ditulis khusus untukmu, untuk setiap suasana hati</p>
+    <div class="ow-grid">
+      <div class="ow-btn" onclick="showOW('sad')"><span class="ow-emoji">😢</span><span class="ow-title">Buka saat sedih</span><span class="ow-sub">surat untuk hatimu</span></div>
+      <div class="ow-btn" onclick="showOW('happy')"><span class="ow-emoji">😊</span><span class="ow-title">Buka saat bahagia</span><span class="ow-sub">bagikan bersamaku</span></div>
+      <div class="ow-btn" onclick="showOW('missing')"><span class="ow-emoji">🌙</span><span class="ow-title">Buka saat kangen</span><span class="ow-sub">aku di sini</span></div>
+      <div class="ow-btn" onclick="showOW('proud')"><span class="ow-emoji">🌟</span><span class="ow-title">Buka saat bangga</span><span class="ow-sub">lihat seberapa jauh kamu</span></div>
+      <div class="ow-btn" onclick="showOW('lonely')"><span class="ow-emoji">🤗</span><span class="ow-title">Buka saat kesepian</span><span class="ow-sub">kamu tak pernah sendirian</span></div>
+      <div class="ow-btn" onclick="showOW('love')"><span class="ow-emoji">💕</span><span class="ow-title">Buka saat butuh cinta</span><span class="ow-sub">selalu ada</span></div>
+    </div>
+    <div id="ow-message"><h3 id="ow-title"></h3><p id="ow-text"></p></div>
+  </section>
+
+  <!-- 9. PETA BINTANG -->
+  <section class="page" id="starmap-section">
+    <h2>🌌 Langit Malammu</h2>
+    <p class="sub">bintang-bintang pada malam kamu lahir</p>
+    <div id="star-canvas-wrap"><canvas id="star-canvas"></canvas></div>
+    <p class="star-caption">"Di bawah langit ini, di suatu tempat, sebuah bintang dinamai untukmu."</p>
+    <p class="star-date">✦ Lahir di Bawah Cahaya Bintang ✦</p>
+  </section>
+
+  <!-- 10. SURAT CINTA -->
+  <section class="page" id="letter-section">
+    <h2>📜 Surat Untukmu</h2>
+    <div class="parchment">
+      <div class="date">Ditulis dengan cinta, di hari ulang tahunmu</div>
+      <h3>Sayangku, Keyza Berliana,</h3>
+      <p>Kadang aku bingung gimana cara jelasinnya, tapi sejak ada kamu banyak hal berubah jadi lebih baik. Bukan cuma buat aku, tapi juga buat orang-orang di sekitar kamu. Karena tanpa sadar, kamu selalu bisa bikin orang lain ngerasa nyaman dan bahagia 🤍</p>
+      <p>Aku suka cara kamu ketawa lepas tanpa dibuat-buat. Aku juga suka cara kamu sayang sama aku. Dan anehnya, hal-hal sederhana bareng kamu selalu kerasa spesial buat aku. Bahkan momen kecil pun jadi pengen aku inget terus 🤍</p>
+      <p>Jadi di hari spesial kamu ini, aku cuma mau kamu tau satu hal 🤍 Kamu itu selalu berhasil bikin seseorang senyum, bahkan sebelum harinya mulai. Dan buat aku, dunia rasanya jadi lebih indah sejak ada kamu di dalamnya.</p>
+      <p>Selamat ulang tahun sayangku, Keyza Berliana 🤍 Walaupun sekarang kita lagi jauh, kamu tetep selalu ada di hati aku.</p>
+      <div class="signature">Selamanya milikmu, ✦</div>
+      <div class="wax-seal">💌</div>
+    </div>
+  </section>
+
+  <!-- 11. PESAN SUARA -->
+  <section class="page" id="voice-section">
+    <h2>🎙️ Pesan Suara</h2>
+    <p class="sub">pesan langsung dari hati — tekan putar</p>
+    <div class="voice-card">
+      <div class="voice-avatar">🎙️</div>
+      <div class="voice-name">Pesan untuk LianN</div>
+      <div class="voice-sub">voice note ulang tahun · direkam dengan cinta</div>
+      <div class="waveform" id="waveform"></div>
+      <button id="voice-play-btn" onclick="toggleVoice()">▶</button>
+      <div class="voice-duration" id="voice-duration">0:00 / 0:30</div>
+    </div>
+  </section>
+
+</div><!-- end pages-container -->
+
+<!-- ══════════════════════════════════════
+     NAVIGASI HALAMAN (NEXT / PREV)
+     ══════════════════════════════════════ -->
+<div id="page-nav">
+  <button class="page-btn" id="prev-btn" onclick="prevPage()" disabled>‹ Sebelumnya</button>
+  <div id="page-dots"></div>
+  <button class="page-btn" id="next-btn" onclick="nextPage()">Berikutnya ›</button>
+</div>
+
+<!-- MODAL -->
+<div id="modal">
+  <div id="modal-box">
+    <button id="modal-close" onclick="closeModal()">✕</button>
+    <span id="modal-icon"></span>
+    <div id="modal-title"></div>
+    <div id="modal-text"></div>
+  </div>
+</div>
+
+<!-- MUSIC BAR -->
+<div id="music-bar">
+  <div class="music-eq" id="music-eq">
+    <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+  </div>
+  <div class="music-info">
+    <div class="music-title">Selamat Ulang Tahun, LianN 🎂</div>
+  </div>
+  <button id="music-play" onclick="toggleMusic()">▶</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,340 @@
+/* ===========================
+   style.css — LianN Birthday
+   =========================== */
+
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --rose:#e8a0a0;--blush:#f7d6d6;--gold:#c9a84c;--ivory:#fdf8f0;--dark:#1a0f0f;
+  --parchment:#f4ead0;--ink:#3d2b1f;--night:#080818;--star:#fffbe6;
+}
+
+html,body{height:100%;overflow:hidden}
+body{background:var(--night);color:#fff;font-family:'Lato',sans-serif;overflow-x:hidden;cursor:none;touch-action:pan-y}
+
+/* Custom Cursor — hidden on touch devices */
+#cursor{position:fixed;width:16px;height:16px;border:1.5px solid var(--rose);border-radius:50%;pointer-events:none;z-index:9999;transition:transform .15s;transform:translate(-50%,-50%)}
+#cursor-dot{position:fixed;width:4px;height:4px;background:var(--rose);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+@media(pointer:coarse){#cursor,#cursor-dot{display:none}body{cursor:auto}}
+
+/* PAGE SYSTEM — no scroll, page-by-page */
+#pages-container{width:100%;height:100vh;overflow:hidden;position:relative}
+.page{
+  position:absolute;top:0;left:0;width:100%;height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:80px 24px 80px;text-align:center;overflow:hidden;overflow-y:auto;
+  opacity:0;pointer-events:none;
+  transition:opacity .6s ease, transform .6s cubic-bezier(.4,0,.2,1);
+  transform:translateY(30px);
+}
+.page.active{opacity:1;pointer-events:auto;transform:translateY(0)}
+.page.exit-up{opacity:0;transform:translateY(-30px)}
+.page.exit-down{opacity:0;transform:translateY(30px)}
+
+/* Custom scrollbar inside pages */
+.page::-webkit-scrollbar{width:3px}
+.page::-webkit-scrollbar-track{background:transparent}
+.page::-webkit-scrollbar-thumb{background:var(--rose);border-radius:2px}
+
+/* NAV */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;gap:6px;justify-content:center;padding:10px 12px;flex-wrap:wrap;
+  background:rgba(8,8,24,0.85);backdrop-filter:blur(12px);
+  border-bottom:0.5px solid rgba(255,255,255,0.07);
+}
+#nav button{
+  background:transparent;border:0.5px solid rgba(255,255,255,0.2);
+  color:rgba(255,255,255,0.7);padding:5px 10px;border-radius:20px;
+  font-size:10px;letter-spacing:1px;cursor:pointer;font-family:'Lato',sans-serif;transition:all .2s;
+}
+#nav button:hover,#nav button.active-nav{border-color:var(--rose);color:var(--rose)}
+
+/* CONFETTI CANVAS */
+#confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:50}
+
+/* NEXT / PREV NAVIGATION */
+#page-nav{
+  position:fixed;bottom:70px;left:0;right:0;z-index:100;
+  display:flex;justify-content:center;align-items:center;gap:16px;padding:0 24px;
+}
+.page-btn{
+  background:rgba(232,160,160,0.1);border:0.5px solid rgba(232,160,160,0.35);
+  color:var(--rose);padding:10px 28px;border-radius:30px;
+  font-family:'Lato',sans-serif;font-size:12px;letter-spacing:2px;cursor:pointer;
+  transition:all .25s;text-transform:uppercase;
+}
+.page-btn:hover{background:var(--rose);color:#1a0820}
+.page-btn:disabled{opacity:0.2;pointer-events:none}
+#page-dots{display:flex;gap:8px;align-items:center}
+.page-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);transition:all .3s;cursor:pointer}
+.page-dot.active{background:var(--rose);transform:scale(1.3)}
+
+/* ============================
+   NETFLIX INTRO OVERLAY
+   ============================ */
+#lian-intro{
+  position:fixed;inset:0;z-index:300;background:#000;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  gap:0;
+}
+#lian-intro.hidden{display:none}
+#lian-logo-wrap{position:relative;display:flex;align-items:center;justify-content:center}
+#lian-name{
+  font-size:clamp(80px,20vw,180px);font-weight:900;font-family:'Lato',sans-serif;
+  letter-spacing:-6px;
+  background:linear-gradient(180deg,#e8a0a0 0%,#c06060 50%,#7a2020 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  opacity:0;transform:scale(3);
+  filter:drop-shadow(0 0 60px rgba(232,160,160,0.8));
+}
+#lian-name.animate{
+  animation:lianReveal 2.2s cubic-bezier(.16,.84,.44,1) forwards;
+}
+@keyframes lianReveal{
+  0%{opacity:0;transform:scale(3);letter-spacing:30px;filter:drop-shadow(0 0 80px rgba(232,160,160,1))}
+  40%{opacity:1;transform:scale(1.08);letter-spacing:-2px;filter:drop-shadow(0 0 40px rgba(232,160,160,0.6))}
+  70%{transform:scale(1);letter-spacing:-6px}
+  100%{opacity:1;transform:scale(1);letter-spacing:-6px;filter:drop-shadow(0 0 20px rgba(232,160,160,0.3))}
+}
+#lian-underline{
+  width:0;height:2px;background:linear-gradient(90deg,transparent,var(--rose),transparent);
+  margin-top:8px;transition:width 1s ease .8s;
+}
+#lian-name.animate ~ #lian-underline{width:80%}
+#lian-tagline{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(13px,2.5vw,20px);color:rgba(255,255,255,0.5);
+  letter-spacing:4px;margin-top:20px;
+  opacity:0;transition:opacity 1s ease 1.5s;
+}
+#lian-name.animate ~ #lian-underline ~ #lian-tagline{opacity:1}
+#lian-skip{
+  position:absolute;bottom:36px;right:36px;
+  background:transparent;border:0.5px solid rgba(255,255,255,0.2);
+  color:rgba(255,255,255,0.4);padding:8px 20px;border-radius:20px;
+  font-size:12px;letter-spacing:1px;cursor:pointer;font-family:'Lato',sans-serif;
+  transition:all .2s;
+}
+#lian-skip:hover{border-color:var(--rose);color:var(--rose)}
+
+/* ============================
+   1. OPENER
+   ============================ */
+#opener{background:radial-gradient(ellipse at 50% 40%, #1a0820 0%, #080818 70%)}
+#opener .stars-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.star-dot{position:absolute;border-radius:50%;background:#fff;animation:twinkle 3s infinite}
+@keyframes twinkle{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
+#opener h1{font-family:'Playfair Display',serif;font-size:clamp(38px,8vw,80px);font-weight:400;line-height:1.1;color:#fff}
+#opener h1 em{font-style:italic;color:var(--rose)}
+#opener .tagline{font-weight:200;letter-spacing:4px;font-size:11px;color:rgba(255,255,255,0.5);text-transform:uppercase;margin-top:16px}
+#open-btn{
+  margin-top:36px;background:transparent;border:1px solid var(--rose);color:var(--rose);
+  padding:14px 40px;border-radius:40px;font-family:'Playfair Display',serif;font-style:italic;
+  font-size:18px;cursor:pointer;transition:all .3s;
+}
+#open-btn:hover{background:var(--rose);color:#1a0820;transform:scale(1.04)}
+
+/* ============================
+   2. TYPING MESSAGE
+   ============================ */
+#typing-section{background:linear-gradient(160deg,#0d0820 0%,#120a1a 100%)}
+#typed-text{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(18px,3.5vw,36px);line-height:1.7;color:#fff;
+  min-height:3em;max-width:680px;
+}
+#typed-text .cursor-blink{display:inline-block;width:2px;height:1em;background:var(--rose);margin-left:2px;animation:blink .7s infinite;vertical-align:text-bottom}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ============================
+   3. COUNTDOWN
+   ============================ */
+/* 
+   *** UBAH TANGGAL ULANG TAHUN DI SINI ***
+   Buka file script.js, cari baris:
+   const birthday = new Date(TAHUN, BULAN-1, TANGGAL, 0, 0, 0);
+   Contoh: 15 Juni 2025 → new Date(2025, 5, 15, 0, 0, 0)
+   (Bulan dimulai dari 0: Januari=0, Februari=1, ... Desember=11)
+*/
+#countdown-section{background:radial-gradient(ellipse at 50% 60%,#1a0a10 0%,#0d0818 80%)}
+#countdown-section h2{font-family:'Playfair Display',serif;font-size:clamp(18px,3.5vw,30px);font-weight:400;color:var(--blush);margin-bottom:32px}
+#countdown-display{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.cd-box{background:rgba(255,255,255,0.04);border:0.5px solid rgba(232,160,160,0.3);border-radius:16px;padding:16px 22px;min-width:80px}
+.cd-num{font-family:'Playfair Display',serif;font-size:clamp(32px,7vw,64px);font-weight:700;color:var(--rose);display:block;line-height:1}
+.cd-label{font-size:10px;letter-spacing:3px;color:rgba(255,255,255,0.4);text-transform:uppercase;display:block;margin-top:6px}
+#surprise-msg{display:none;animation:fadeUp .8s forwards}
+#surprise-msg h2{font-family:'Playfair Display',serif;font-size:clamp(24px,5vw,48px);font-style:italic;color:var(--rose);margin-bottom:16px}
+#surprise-msg p{font-weight:300;font-size:15px;color:rgba(255,255,255,0.7);max-width:480px;line-height:1.8}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* ============================
+   4. KENANGAN (dulu Photos)
+   ============================ */
+#memories-section{background:#0a0a14}
+#memories-section h2{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,30px);font-weight:400;color:var(--blush);margin-bottom:12px}
+#memories-section .sub{font-size:12px;color:rgba(255,255,255,0.3);margin-bottom:24px;letter-spacing:1px}
+.memory-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:600px;width:100%}
+.memory-card{aspect-ratio:1;border-radius:14px;overflow:hidden;position:relative;cursor:pointer;border:1px solid rgba(232,160,160,0.15);transition:transform .3s}
+.memory-card:hover{transform:scale(1.05)}
+.memory-card .ph-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:40px;flex-direction:column;gap:6px}
+.memory-card .ph-label{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.5);text-transform:uppercase}
+.ph1{background:linear-gradient(135deg,#2a1020,#3a1530)}
+.ph2{background:linear-gradient(135deg,#101a2a,#152040)}
+.ph3{background:linear-gradient(135deg,#1a1a10,#2a2515)}
+.ph4{background:linear-gradient(135deg,#201015,#301025)}
+.ph5{background:linear-gradient(135deg,#0f1a15,#152520)}
+.ph6{background:linear-gradient(135deg,#1a100f,#2a1510)}
+
+/* ============================
+   5. HADIAH
+   ============================ */
+#gifts-section{background:radial-gradient(ellipse at 50% 50%,#15080d 0%,#080814 70%)}
+#gifts-section h2{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,30px);font-weight:400;color:var(--blush);margin-bottom:8px}
+#gifts-section .sub{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:28px;letter-spacing:1px}
+.gift-box-wrap{position:relative;cursor:pointer;display:inline-block}
+#gift-icon{font-size:90px;display:block;transition:transform .3s;filter:drop-shadow(0 0 24px rgba(232,160,160,0.4))}
+.gift-box-wrap:hover #gift-icon{transform:scale(1.1) rotate(-5deg)}
+#gift-reveal{display:none;margin-top:24px;max-width:400px;animation:fadeUp .6s forwards}
+.gift-item{background:rgba(255,255,255,0.04);border:0.5px solid rgba(232,160,160,0.2);border-radius:14px;padding:18px 22px;margin-bottom:10px;text-align:left}
+.gift-item .g-icon{font-size:22px;margin-bottom:8px;display:block}
+.gift-item .g-title{font-family:'Playfair Display',serif;font-size:14px;color:var(--rose);margin-bottom:6px}
+.gift-item .g-text{font-size:12px;color:rgba(255,255,255,0.6);line-height:1.6;font-weight:300}
+#next-gift-btn{background:transparent;border:0.5px solid var(--rose);color:var(--rose);padding:9px 24px;border-radius:24px;cursor:pointer;font-family:'Lato',sans-serif;font-size:12px;letter-spacing:1px;margin-top:10px;transition:all .2s}
+#next-gift-btn:hover{background:var(--rose);color:#1a0820}
+
+/* ============================
+   6. KUIS
+   ============================ */
+#quiz-section{background:linear-gradient(160deg,#0a0f18 0%,#080818 100%)}
+#quiz-section h2{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,30px);font-weight:400;color:var(--blush);margin-bottom:28px}
+.quiz-q{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(16px,2.8vw,24px);color:#fff;margin-bottom:24px;max-width:580px}
+.quiz-options{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:500px;width:100%}
+.quiz-opt{background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.15);border-radius:12px;padding:12px 16px;cursor:pointer;font-size:13px;color:rgba(255,255,255,0.8);text-align:left;font-family:'Lato',sans-serif;transition:all .2s}
+.quiz-opt:hover{border-color:var(--rose);color:var(--rose);background:rgba(232,160,160,0.08)}
+.quiz-opt.correct{border-color:#7ec98a;color:#7ec98a;background:rgba(126,201,138,0.1)}
+.quiz-result{display:none;margin-top:24px;font-family:'Playfair Display',serif;font-size:20px;font-style:italic;color:var(--rose);animation:fadeUp .6s forwards}
+#next-q-btn{display:none;margin-top:16px;background:transparent;border:0.5px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);padding:7px 20px;border-radius:20px;cursor:pointer;font-size:12px;letter-spacing:1px;transition:all .2s}
+#next-q-btn:hover{border-color:var(--rose);color:var(--rose)}
+
+/* ============================
+   7. GAME BALON
+   ============================ */
+#game-section{background:#060c10}
+#game-section h2{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,30px);font-weight:400;color:var(--blush);margin-bottom:6px}
+#game-section .sub{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:20px}
+#game-canvas-wrap{position:relative;width:100%;max-width:480px;height:280px;background:rgba(255,255,255,0.03);border:0.5px solid rgba(232,160,160,0.2);border-radius:16px;overflow:hidden}
+#game-canvas{width:100%;height:100%}
+#game-score{position:absolute;top:12px;right:16px;font-family:'Playfair Display',serif;font-size:16px;color:var(--rose)}
+#game-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
+#game-msg p{font-family:'Playfair Display',serif;font-size:15px;color:rgba(255,255,255,0.8);margin-bottom:12px}
+#start-game-btn{background:var(--rose);border:none;color:#1a0820;padding:10px 26px;border-radius:24px;cursor:pointer;font-family:'Playfair Display',serif;font-style:italic;font-size:15px;pointer-events:auto}
+
+/* ============================
+   8. BUKA KETIKA...
+   ============================ */
+#open-when-section{background:linear-gradient(160deg,#0f0a18 0%,#0a080f 100%)}
+#open-when-section h2{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,30px);font-weight:400;color:var(--blush);margin-bottom:8px}
+#open-when-section .sub{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:28px;letter-spacing:1px}
+.ow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;max-width:620px;width:100%}
+.ow-btn{background:rgba(255,255,255,0.03);border:0.5px solid rgba(232,160,160,0.25);border-radius:16px;padding:18px 14px;cursor:pointer;transition:all .25s;text-align:center;color:#fff}
+.ow-btn:hover{background:rgba(232,160,160,0.08);border-color:var(--rose);transform:translateY(-3px)}
+.ow-btn .ow-emoji{font-size:28px;display:block;margin-bottom:6px}
+.ow-btn .ow-title{font-family:'Playfair Display',serif;font-size:12px;font-style:italic;color:var(--rose);display:block;margin-bottom:4px}
+.ow-btn .ow-sub{font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:1px}
+#ow-message{display:none;margin-top:24px;max-width:480px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(232,160,160,0.2);border-radius:16px;padding:24px;animation:fadeUp .6s forwards}
+#ow-message h3{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:var(--rose);margin-bottom:10px}
+#ow-message p{font-size:13px;line-height:1.8;color:rgba(255,255,255,0.7);font-weight:300}
+
+/* ============================
+   9. PETA BINTANG
+   ============================ */
+#starmap-section{background:#030308}
+#starmap-section h2{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,30px);font-weight:400;color:var(--blush);margin-bottom:6px}
+#starmap-section .sub{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:20px;letter-spacing:1px}
+#star-canvas-wrap{position:relative;width:100%;max-width:320px;height:320px}
+#star-canvas{width:100%;height:100%;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:#030308}
+.star-caption{margin-top:16px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:rgba(255,255,255,0.5);max-width:380px}
+.star-date{font-family:'Playfair Display',serif;font-size:12px;color:var(--gold);letter-spacing:3px;margin-top:8px}
+
+/* ============================
+   10. SURAT CINTA
+   ============================ */
+#letter-section{background:linear-gradient(160deg,#1a1208 0%,#0f0c08 100%)}
+#letter-section h2{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,30px);font-weight:400;color:var(--gold);margin-bottom:28px}
+.parchment{background:var(--parchment);color:var(--ink);border-radius:4px;max-width:500px;width:100%;padding:36px 40px;position:relative;box-shadow:0 8px 48px rgba(0,0,0,0.6);font-family:'Cormorant Garamond',serif}
+.parchment::before{content:'';position:absolute;inset:8px;border:1px solid rgba(61,43,31,0.2);border-radius:2px;pointer-events:none}
+.parchment .date{font-size:12px;color:rgba(61,43,31,0.5);letter-spacing:2px;margin-bottom:20px;text-align:right}
+.parchment h3{font-size:20px;font-style:italic;font-weight:400;color:var(--ink);margin-bottom:16px}
+.parchment p{font-size:15px;line-height:1.9;color:rgba(61,43,31,0.85);margin-bottom:14px;font-weight:300}
+.parchment .signature{text-align:right;margin-top:24px;font-style:italic;font-size:18px;color:var(--ink)}
+.parchment .wax-seal{position:absolute;bottom:-18px;right:36px;width:52px;height:52px;background:radial-gradient(circle,#8b1a1a,#5a0e0e);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 12px rgba(0,0,0,0.4);border:2px solid rgba(255,255,255,0.1)}
+
+/* ============================
+   11. PESAN SUARA
+   ============================ */
+#voice-section{background:linear-gradient(160deg,#0a0818 0%,#060810 100%)}
+#voice-section h2{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,30px);font-weight:400;color:var(--blush);margin-bottom:6px}
+#voice-section .sub{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:28px;letter-spacing:1px}
+.voice-card{background:rgba(255,255,255,0.04);border:0.5px solid rgba(232,160,160,0.2);border-radius:20px;padding:28px 32px;max-width:400px;width:100%}
+.voice-avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#2a1020,#3d1535);border:1.5px solid rgba(232,160,160,0.3);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px}
+.voice-name{font-family:'Playfair Display',serif;font-size:16px;color:#fff;margin-bottom:4px}
+.voice-sub{font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:1px;margin-bottom:20px}
+.waveform{height:44px;display:flex;align-items:center;justify-content:center;gap:3px;margin-bottom:18px}
+.wave-bar{width:3px;background:var(--rose);border-radius:2px;transition:height .1s}
+#voice-play-btn{background:var(--rose);border:none;width:48px;height:48px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;margin:0 auto;transition:all .2s;color:#1a0820}
+#voice-play-btn:hover{transform:scale(1.08);background:#e08080}
+.voice-duration{font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:2px;margin-top:10px}
+
+/* ============================
+   MODAL
+   ============================ */
+#modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:150;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+#modal.open{display:flex}
+#modal-box{background:#12081a;border:0.5px solid rgba(232,160,160,0.2);border-radius:20px;padding:32px;max-width:440px;width:90%;position:relative;animation:fadeUp .4s forwards}
+#modal-close{position:absolute;top:14px;right:18px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:22px;cursor:pointer;transition:color .2s}
+#modal-close:hover{color:#fff}
+#modal-icon{font-size:44px;margin-bottom:12px;display:block}
+#modal-title{font-family:'Playfair Display',serif;font-size:20px;font-style:italic;color:var(--rose);margin-bottom:8px}
+#modal-text{font-size:13px;line-height:1.8;color:rgba(255,255,255,0.65);font-weight:300}
+
+/* ============================
+   MUSIC BAR
+   ============================ */
+#music-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(8,8,24,0.92);backdrop-filter:blur(12px);
+  border-top:0.5px solid rgba(232,160,160,0.15);
+  display:flex;align-items:center;gap:14px;padding:8px 20px;z-index:90;
+}
+.music-info{flex:1;min-width:0}
+.music-title{font-family:'Playfair Display',serif;font-size:12px;color:var(--rose);font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.music-artist{font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:1px}
+#music-play{background:transparent;border:0.5px solid var(--rose);color:var(--rose);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+#music-play:hover{background:var(--rose);color:#1a0820}
+.music-eq{display:flex;align-items:flex-end;gap:2px;height:18px;flex-shrink:0}
+.eq-bar{width:3px;background:var(--rose);border-radius:1px;animation:eq 0.8s infinite alternate;opacity:0.6}
+.eq-bar:nth-child(1){animation-delay:0s;height:8px}
+.eq-bar:nth-child(2){animation-delay:.15s;height:14px}
+.eq-bar:nth-child(3){animation-delay:.3s;height:6px}
+.eq-bar:nth-child(4){animation-delay:.1s;height:18px}
+.eq-bar:nth-child(5){animation-delay:.25s;height:10px}
+@keyframes eq{from{height:4px}to{height:100%}}
+.music-eq.paused .eq-bar{animation:none;height:4px}
+
+/* ============================
+   RESPONSIVE
+   ============================ */
+@media(max-width:600px){
+  .page{padding:70px 16px 90px}
+  .memory-grid{grid-template-columns:repeat(3,1fr);gap:8px;max-width:100%}
+  .quiz-options{grid-template-columns:1fr 1fr}
+  .ow-grid{grid-template-columns:repeat(2,1fr)}
+  .parchment{padding:28px 24px}
+  #page-nav{bottom:60px;gap:10px}
+  .page-btn{padding:9px 20px;font-size:11px}
+  #nav button{font-size:9px;padding:4px 8px}
+}
+@media(max-width:380px){
+  .quiz-options{grid-template-columns:1fr}
+  .ow-grid{grid-template-columns:1fr 1fr}
+}
